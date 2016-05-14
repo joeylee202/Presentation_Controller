@@ -1,5 +1,6 @@
 package joeylee.com.presentationcontroller;
 
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -34,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         //Add accelerometer sensor
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        //initialize all the components
+        editTextAddress = (EditText) findViewById(R.id.ip_address);
+        editTextPort = (EditText) findViewById(R.id.port);
+        buttonConnect = (Button) findViewById(R.id.connectButton);
+        buttonClear = (Button) findViewById(R.id.clearButton);
     }
 
     @Override
@@ -44,12 +51,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
-        editTextAddress = (EditText) findViewById(R.id.ip_address);
-        editTextPort = (EditText) findViewById(R.id.port);
-        buttonConnect = (Button) findViewById(R.id.connectButton);
-        buttonClear = (Button) findViewById(R.id.clearButton);
 
-
+        buttonConnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent socketIntent = new Intent(MainActivity.this, SocketService.class);
+                socketIntent.putExtra("socketAddr", editTextAddress.getText().toString());
+                socketIntent.putExtra("socketPort", editTextPort.getText().toString());
+            }
+        });
     }
 
     @Override
